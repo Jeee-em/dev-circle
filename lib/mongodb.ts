@@ -12,7 +12,8 @@ declare global {
     var mongoose: MongooseCache | undefined;
 }
 
-const MONGODB_URI = process.env.MONGODB_URI;
+// Support either `MONGODB_URI` (expected) or legacy `MONGO_URI` variable names.
+const MONGODB_URI = process.env.MONGODB_URI ?? process.env.MONGO_URI;
 
 
 // Initialize the cache on the global object to persist across hot reloads in development
@@ -38,7 +39,7 @@ async function connectDB(): Promise<typeof mongoose> {
         // Validate MongoDB URI exists
         if (!MONGODB_URI) {
             throw new Error(
-                'Please define the MONGODB_URI environment variable inside .env.local'
+                'Please define the MONGODB_URI environment variable inside .env.local (or set MONGO_URI)'
             );
         }
         const options = {
